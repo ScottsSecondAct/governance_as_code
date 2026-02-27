@@ -1,0 +1,41 @@
+# Build directories
+build/
+out/
+cmake-build-*/
+
+# Compiled objects and libraries
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+
+# Executables
+governance_demo
+tests/test_policy_engine
+tests/test_compliance
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+install_manifest.txt
+compile_commands.json
+_deps/
+
+# CTest / CDash output
+Testing/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Clangd / compile commands
+.cache/
