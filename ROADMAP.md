@@ -4,7 +4,7 @@ This document describes the planned direction for Governance as Code. It is a li
 
 ---
 
-## v0.1 — Foundation (current)
+## v0.1 — Foundation (released)
 
 The initial release establishes the core primitives:
 
@@ -17,7 +17,7 @@ The initial release establishes the core primitives:
 
 ---
 
-## v0.2 — Decision Transparency
+## v0.2 — Decision Transparency (released)
 
 Make policy evaluation observable and auditable.
 
@@ -78,4 +78,5 @@ Ideas being evaluated for later milestones:
 
 | Version | Status | Notes |
 |---------|--------|-------|
+| v0.2.0 | Released | Decision transparency: EvaluationTrace, JSON serialization, policy metadata |
 | v0.1.0 | Released | Initial public release |

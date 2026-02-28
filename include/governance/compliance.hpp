@@ -9,6 +9,8 @@ namespace governance {
 
 struct ComplianceRule {
     std::string name;
+    std::string version;
+    std::string author;
     std::string description;
     std::function<bool(const Resource&)> check;
 };

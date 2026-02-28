@@ -3,6 +3,7 @@
 #include "governance/types.hpp"
 #include <functional>
 #include <optional>
+#include <ostream>
 #include <vector>
 #include <string>
 
@@ -13,7 +14,47 @@ using PolicyFn = std::function<std::optional<PolicyDecision>(const RequestContex
 
 struct Policy {
     std::string name;
+    std::string version;      // e.g. "1.0"
+    std::string author;       // e.g. "governance-team"
+    std::string description;
     PolicyFn    evaluate;
+};
+
+// ── Trace types ───────────────────────────────────────────────────────────────
+
+enum class StepOutcome { Allow, Deny, Abstain };
+
+inline std::ostream& operator<<(std::ostream& os, StepOutcome o) {
+    switch (o) {
+        case StepOutcome::Allow:   return os << "Allow";
+        case StepOutcome::Deny:    return os << "Deny";
+        case StepOutcome::Abstain: return os << "Abstain";
+        default:                   return os << "Unknown";
+    }
+}
+
+struct PolicyStep {
+    std::string policy_name;
+    StepOutcome outcome;
+    std::string reason;   // empty when Abstain
+};
+
+struct EvaluationTrace {
+    RequestContext          context;
+    std::vector<PolicyStep> steps;
+
+    std::size_t evaluated_count() const {
+        std::size_t count = 0;
+        for (const auto& s : steps)
+            if (s.outcome != StepOutcome::Abstain) ++count;
+        return count;
+    }
+    std::size_t abstain_count() const { return steps.size() - evaluated_count(); }
+};
+
+struct EvaluationResult {
+    PolicyDecision  decision;
+    EvaluationTrace trace;
 };
 
 /**
@@ -30,7 +71,7 @@ class PolicyEngine {
 public:
     void register_policy(Policy policy);
 
-    PolicyDecision evaluate(const RequestContext& ctx) const;
+    EvaluationResult evaluate(const RequestContext& ctx) const;
 
     std::size_t policy_count() const { return policies_.size(); }
 

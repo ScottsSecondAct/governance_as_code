@@ -1,4 +1,5 @@
 #include "governance/compliance.hpp"
+#include "governance/json.hpp"
 
 #include <iostream>
 #include <string>
@@ -131,6 +132,8 @@ void test_custom_rule() {
     ComplianceChecker checker;
     checker.add_rule({
         "MustHaveRegionTag",
+        "1.0",
+        "governance-team",
         "Resource must specify a 'region' tag.",
         [](const Resource& r) { return r.tags.count("region") > 0; }
     });
@@ -151,6 +154,17 @@ void test_rule_count() {
               static_cast<std::size_t>(4), checker.rule_count());
 }
 
+void test_json_compliance_report() {
+    std::cout << "\n[JsonComplianceReport]\n";
+    auto checker = default_compliance_checker();
+    Resource rogue { "db-legacy", "database", "public", {} };
+    auto report = checker.evaluate(rogue);
+    auto json = to_json(report);
+    ASSERT_TRUE("json contains resource_id", json.find("\"db-legacy\"")   != std::string::npos);
+    ASSERT_TRUE("json contains compliant false", json.find("false")        != std::string::npos);
+    ASSERT_TRUE("json contains violations key",  json.find("violations")   != std::string::npos);
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 int main() {
@@ -164,6 +178,7 @@ int main() {
     test_multiple_violations();
     test_custom_rule();
     test_rule_count();
+    test_json_compliance_report();
 
     std::cout << "\n--- Results: "
               << passed << " passed, " << failed << " failed ---\n";

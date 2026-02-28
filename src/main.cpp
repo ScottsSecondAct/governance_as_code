@@ -1,5 +1,6 @@
 #include "governance/policy_engine.hpp"
 #include "governance/compliance.hpp"
+#include "governance/json.hpp"
 
 #include <iostream>
 #include <string>
@@ -9,6 +10,15 @@ using namespace governance;
 
 static std::string effect_str(Effect e) {
     return e == Effect::Allow ? "[ALLOW]" : "[DENY] ";
+}
+
+static std::string outcome_str(StepOutcome o) {
+    switch (o) {
+        case StepOutcome::Allow:   return "Allow  ";
+        case StepOutcome::Deny:    return "Deny   ";
+        case StepOutcome::Abstain: return "Abstain";
+        default:                   return "Unknown";
+    }
 }
 
 static void print_decision(const RequestContext& ctx, const PolicyDecision& d) {
@@ -22,6 +32,18 @@ static void print_decision(const RequestContext& ctx, const PolicyDecision& d) {
               << "  Decision  : " << effect_str(d.effect)
               << " <- " << d.policy_name << "\n"
               << "  Reason    : " << d.reason << "\n";
+}
+
+static void print_trace(const EvaluationTrace& trace) {
+    std::cout << "  Steps:\n";
+    for (const auto& step : trace.steps) {
+        std::cout << "    [" << outcome_str(step.outcome) << "] "
+                  << step.policy_name;
+        if (!step.reason.empty()) {
+            std::cout << " -- " << step.reason;
+        }
+        std::cout << "\n";
+    }
 }
 
 static void separator(const std::string& title) {
@@ -70,7 +92,8 @@ int main() {
     };
 
     for (const auto& ctx : scenarios) {
-        print_decision(ctx, engine.evaluate(ctx));
+        auto result = engine.evaluate(ctx);
+        print_decision(ctx, result.decision);
     }
 
     // ── Compliance Checks ────────────────────────────────────────────────────
@@ -94,6 +117,36 @@ int main() {
             for (const auto& v : report.violations)
                 std::cout << "             -> " << v << "\n";
         }
+    }
+
+    // ── Evaluation Trace ─────────────────────────────────────────────────────
+    separator("EVALUATION TRACE");
+
+    {
+        RequestContext ctx { bob, prod_api, {"write"}, "production", false };
+        auto result = engine.evaluate(ctx);
+        std::cout << "\n  Principal : " << ctx.principal.id
+                  << " [" << ctx.principal.role << "]\n"
+                  << "  Resource  : " << ctx.resource.id << "\n"
+                  << "  Action    : " << ctx.action.verb
+                  << " @ " << ctx.environment << "\n"
+                  << "  Decision  : " << effect_str(result.decision.effect)
+                  << " <- " << result.decision.policy_name << "\n";
+        print_trace(result.trace);
+    }
+
+    // ── JSON Output ──────────────────────────────────────────────────────────
+    separator("JSON OUTPUT");
+
+    {
+        RequestContext ctx { alice, patient_db, {"read"}, "production", true };
+        auto result = engine.evaluate(ctx);
+        std::cout << "\n  EvaluationResult:\n" << to_json(result) << "\n";
+    }
+
+    {
+        auto report = checker.evaluate(rogue_db);
+        std::cout << "\n  ComplianceReport:\n" << to_json(report) << "\n";
     }
 
     std::cout << "\n" << std::string(55, '-') << "\n"
