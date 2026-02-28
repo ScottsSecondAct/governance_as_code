@@ -1,0 +1,46 @@
+# Security Policy
+
+## Supported Versions
+
+| Version | Supported          |
+| ------- | ------------------ |
+| 0.1.x   | :white_check_mark: |
+| < 0.1   | :x:                |
+
+## Reporting a Vulnerability
+
+**Please do not open a public GitHub issue for security vulnerabilities.**
+
+Instead, report vulnerabilities privately using one of the following methods:
+
+1. **GitHub Private Vulnerability Reporting:** Use the [Security Advisories](https://github.com/ScottsSecondAct/governance-as-code/security/advisories/new) page to submit a private report directly on GitHub.
+2. **Email:** Send details to **scott@ScottsSecondAct.com**.
+
+### What to Include
+
+- Description of the vulnerability
+- Steps to reproduce
+- Affected version(s)
+- Potential impact
+
+### What to Expect
+
+- **Acknowledgment** within 72 hours of your report
+- **Status update** within 7 days with an initial assessment
+- **Resolution timeline** communicated once the issue is confirmed
+- Credit in the release notes (unless you prefer to remain anonymous)
+
+### Scope
+
+As a C++ policy enforcement and compliance library, relevant security concerns include:
+
+- Memory safety issues (buffer overflows, use-after-free)
+- Logic flaws that cause deny-wins or fail-closed semantics to be bypassed
+- Incorrect policy evaluation leading to unauthorized access grants
+- Unsafe handling of untrusted input passed to policy or compliance rule functions
+
+### Out of Scope
+
+- Issues requiring physical access to the machine
+- Social engineering
+- Vulnerabilities in dependencies with existing upstream fixes (please check first)

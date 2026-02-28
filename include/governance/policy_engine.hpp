@@ -55,4 +55,7 @@ Policy analyst_read_only();
 /// Engineers have full access in dev/staging, read-only in production.
 Policy engineer_access();
 
+/// Returns a PolicyEngine pre-loaded with all built-in policies in recommended evaluation order.
+PolicyEngine default_policy_engine();
+
 } // namespace governance

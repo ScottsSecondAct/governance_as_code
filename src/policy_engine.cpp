@@ -114,4 +114,14 @@ Policy engineer_access() {
     };
 }
 
+PolicyEngine default_policy_engine() {
+    PolicyEngine engine;
+    engine.register_policy(admin_full_access());
+    engine.register_policy(mfa_required_for_restricted());
+    engine.register_policy(production_immutability());
+    engine.register_policy(analyst_read_only());
+    engine.register_policy(engineer_access());
+    return engine;
+}
+
 } // namespace governance

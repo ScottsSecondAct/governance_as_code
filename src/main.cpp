@@ -32,12 +32,7 @@ static void separator(const std::string& title) {
 
 int main() {
     // ── Build Policy Engine ──────────────────────────────────────────────────
-    PolicyEngine engine;
-    engine.register_policy(admin_full_access());
-    engine.register_policy(mfa_required_for_restricted());
-    engine.register_policy(production_immutability());
-    engine.register_policy(analyst_read_only());
-    engine.register_policy(engineer_access());
+    auto engine = default_policy_engine();
 
     // ── Define Resources ─────────────────────────────────────────────────────
     Resource patient_db {

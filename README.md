@@ -23,29 +23,6 @@ The engine uses a **deny-wins, fail-closed** resolution strategy:
 
 ---
 
-## Project Structure
-
-```
-governance_as_code/
-├── CMakeLists.txt            # Root build file
-├── README.md
-├── include/
-│   └── governance/
-│       ├── types.hpp         # Core types: Principal, Resource, Action, etc.
-│       ├── policy_engine.hpp # PolicyEngine + built-in policy declarations
-│       └── compliance.hpp    # ComplianceChecker + built-in rule declarations
-├── src/
-│   ├── policy_engine.cpp     # Engine + 5 built-in policies
-│   ├── compliance.cpp        # Checker + 4 built-in compliance rules
-│   └── main.cpp              # Demo application
-└── tests/
-    ├── CMakeLists.txt
-    ├── test_policy_engine.cpp # Policy engine test suite
-    └── test_compliance.cpp    # Compliance checker test suite
-```
-
----
-
 ## Built-in Policies
 
 | Policy | Description |
@@ -77,16 +54,8 @@ governance_as_code/
 ### Quick start
 
 ```bash
-# Clone / enter the project directory
-cd governance_as_code
-
-# Configure
 cmake -B build -DCMAKE_BUILD_TYPE=Release
-
-# Build
 cmake --build build
-
-# Run the demo
 ./build/governance_demo
 ```
 

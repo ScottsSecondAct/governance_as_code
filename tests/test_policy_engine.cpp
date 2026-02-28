@@ -9,13 +9,7 @@ using namespace governance;
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 static PolicyEngine make_default_engine() {
-    PolicyEngine e;
-    e.register_policy(admin_full_access());
-    e.register_policy(mfa_required_for_restricted());
-    e.register_policy(production_immutability());
-    e.register_policy(analyst_read_only());
-    e.register_policy(engineer_access());
-    return e;
+    return default_policy_engine();
 }
 
 static Resource make_resource(const std::string& id,
