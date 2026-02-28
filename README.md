@@ -1,4 +1,4 @@
-# Governance as Code — C++ Sample
+# Governance as Code
 
 ![AI Assisted](https://img.shields.io/badge/AI%20Assisted-Claude-blue?logo=anthropic)
 
